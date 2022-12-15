@@ -9,7 +9,8 @@ interface food{
     price: Number;
     reviews:[];
     rating:Number;
-    numReviews: Number
+    numReviews: Number;
+    image:string;
 }
 const foodSchema = new Schema<food>({
   name: {
@@ -44,6 +45,9 @@ const foodSchema = new Schema<food>({
     required: true,
     default: 0,
   },
+  image:{
+    type: String,
+  }
 })
 
 const foodModel = model<food>('foods', foodSchema)

@@ -30,11 +30,16 @@ export const isValidObjectId = (objectId: string)=> {
     return mongoose.Types.ObjectId.isValid(objectId)
 }
 
-// for pincode
+// for pincode;
 export const isValidPincode = (pincode)=> {
     const pin = /^[1-9][0-9]{5}$/
     return pin.test(pincode);
 };
 
+// for link;
+export const isValidImageLink = (image)=> {
+    var link = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/gm;
+    return link.test(image);
+}
 
 

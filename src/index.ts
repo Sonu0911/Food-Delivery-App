@@ -9,10 +9,13 @@ import router5    from './routes/orderRoute'
 import router6    from "./routes/reviewRoute"
 import router7    from "./routes/sellerRoute"
 import router8    from "./routes/favRoute"
+import router9    from "./routes/bestOffersRoute"
 import multer     from 'multer'
 import ngrok from "ngrok"
 import couponCodeDiscount from "./routes/couponRoute";
 import CouponCodeDiscount from "./models/couponModel"
+import bestChoice from "./routes/bestChoices&TodaySRoute"
+
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -79,8 +82,11 @@ export const checkExpirationTime = () => {
 };
 setInterval(checkExpirationTime, 1000); // converting to millisecond
 couponCodeDiscount.post("/checkExpirationTime",checkExpirationTime)
+
+
+
 connect.connects()
-app.use('/', router,router2,router3,router4,router5,router6,router7,couponCodeDiscount,router8)
+app.use('/', router,router2,router3,router4,router5,router6,router7,couponCodeDiscount,router8,router9,bestChoice)
 
 app.listen(process.env.PORT || 3000, function() {
     console.log('Express app running on port ' + (process.env.PORT || 3000))

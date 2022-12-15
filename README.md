@@ -142,6 +142,11 @@ CRUD
 
 //payout
 
+data= [{
+    id:1,
+    name:"rushi"
+}]
+
 
       
 
