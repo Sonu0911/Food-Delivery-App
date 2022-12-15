@@ -1,35 +1,16 @@
 import mongoose,{Schema, model} from 'mongoose'
 
-interface review{
-    name:string;
-    rating:number;
-    comment:string
-}
-const reviewSchema = new Schema<review>({
-    name: {
-         type: String,
-         required: true 
-    },
-    rating: { 
-        type: Number, 
-        required: true 
-    },
-    comment: { 
-        type: String, 
-        required: true
-    },
-  },
- 
-)
+
 interface restaurant{
-    name:string;
-    description:string;
-    address: string;
+    name:String;
+    description:String;
+    address: String;
     mobile:Number;
-    reviews:[];
     rating:Number;
-    numReviews: Number;
-    files:String
+    reviews: Number;
+    files:String,
+    city:String
+    isDeleted:Boolean
 }
 const restaurantSchema = new Schema<restaurant>({
  
@@ -45,21 +26,23 @@ const restaurantSchema = new Schema<restaurant>({
     type: String,
     required: true,
   },
+  city:{
+   type: String,
+   required: true,
+  },
   mobile: {
     type: Number,
     required: true,
   },
-  reviews: [reviewSchema],
-  rating: {
+  reviews: {
     type: Number,
     required: true,
     default: 0,
   },
-  numReviews: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  }
 })
 
 const RestaurantModel = model<restaurant>('restaurant', restaurantSchema)

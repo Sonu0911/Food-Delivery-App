@@ -46,6 +46,15 @@ const orderSchema = new mongoose_2.Schema({
         required: true,
         default: 0.0,
     },
+    discount: {
+        type: Number,
+        default: 0
+    },
+    status: {
+        type: String,
+        default: "pending"
+    },
+    orders: []
 }, {
     timestamps: true,
 });

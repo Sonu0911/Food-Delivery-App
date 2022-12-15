@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFood = exports.getListOfFood = exports.getFoodByRestro = exports.addingFood = void 0;
+exports.deleteFood = exports.getFood = exports.getListOfFood = exports.getFoodByRestro = exports.addingFood = void 0;
 const val = __importStar(require("../validation/validation"));
 const foodModel_1 = __importDefault(require("../models/foodModel"));
 const addingFood = async (req, res) => {
@@ -81,7 +81,7 @@ const getListOfFood = async (req, res) => {
 exports.getListOfFood = getListOfFood;
 const getFood = async (req, res) => {
     try {
-        const restroId = req.params.restroId;
+        const restroId = req?.params?.restroId;
         const food = await foodModel_1.default.find({ restaurant: restroId }, { isDeleted: false });
         if (!food) {
             return res.status(404).send({ status: false, msg: "not found" });
@@ -93,3 +93,20 @@ const getFood = async (req, res) => {
     }
 };
 exports.getFood = getFood;
+const deleteFood = async (req, res) => {
+    try {
+        const foodId = req?.params?.foodId;
+        if (!val.isValidObjectId(foodId)) {
+            return res.status(400).send({ status: false, msg: "id is invalid" });
+        }
+        const foodFound = await foodModel_1.default.findOneAndDelete({ _id: foodId }, { new: true });
+        if (!foodFound) {
+            return res.status(404).send({ status: false, msg: "food not found or already deleted" });
+        }
+        return res.status(200).send({ status: true, msg: "food deleted successfully" });
+    }
+    catch (err) {
+        return res.status(500).send({ status: false, message: err.message });
+    }
+};
+exports.deleteFood = deleteFood;

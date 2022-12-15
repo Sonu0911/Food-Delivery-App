@@ -8,17 +8,20 @@ export const createOrder = async (req, res) => {
  try{
     let data=req.body
     const userId=req.body.userId
-    const {orderItems} = data
-
+    var {orderItems,qty,price,coupon,totalPrice,deliveryCharge,packingCharge,totalPrice} = data
+ 
     if(!val.isValidObjectId(userId)){
         return res.status(400).send({status:false,msg:"please provide valid id"})
     }
     if (orderItems && orderItems.length === 0) {
-        return res.status(400).send({status:false,msg:"no items found"})
+        return res.status(404).send({status:false,msg:"no items found"})
     }  
-
-    const createdOrder =  await Order.create(data)
-       return res.status(201).send({status:true,data:createdOrder})
+     totalPrice = qty*price
+     totalPrice = totalPrice + deliveryCharge + packingCharge;
+     //const finalData={finalPrice:finalPrice}
+     
+     const createdOrder = await Order.create(data)
+     return res.status(201).send({status:true,data:createdOrder})
   }catch(err){
     return res.status(500).send({status:false, message:err.message})
   }

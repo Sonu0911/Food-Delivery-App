@@ -1,5 +1,6 @@
 import express from 'express';
 import * as restroController from '../controller/restaurantController'
+import router from './userRoute';
 const routers = express.Router();
 
 
@@ -15,5 +16,9 @@ routers.get("/getAllRestro",restroController.getAllRestro)
 
 // 4. upload the photo 
 //routers.post("/upload",restroController.restroImage)
+
+// 5. get the restro with the help of city;
+routers.get("/getByCity/:city",restroController.getRestroByCity)
+
 
 export default routers

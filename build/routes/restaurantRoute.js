@@ -32,4 +32,5 @@ const routers = express_1.default.Router();
 routers.post("/addRestro", restroController.addRestaurant);
 routers.get("/getById/:restroId", restroController.getRestaurantById);
 routers.get("/getAllRestro", restroController.getAllRestro);
+routers.get("/getByCity/:city", restroController.getRestroByCity);
 exports.default = routers;

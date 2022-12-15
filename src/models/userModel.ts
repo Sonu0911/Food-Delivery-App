@@ -17,7 +17,6 @@ const userSchema = new Schema<User>({
         required: true,
         trim: true
     },
-  
     email: {
         type: String, 
         required: true,
@@ -29,7 +28,6 @@ const userSchema = new Schema<User>({
         type: String,
         required: true,
         unique: true
-
     },
     passcode: {
         type: Number,

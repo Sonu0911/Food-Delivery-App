@@ -1,25 +1,6 @@
 import mongoose,{Schema, model} from 'mongoose'
 const ObjectId=mongoose.Schema.Types.ObjectId
-interface review{
-    name:string;
-    rating:number;
-    comment:string
-}
-const reviewSchema = new Schema<review>({
-    name: {
-         type: String,
-         required: true 
-        },
-    rating: { 
-        type: Number, 
-        required: true 
-    },
-    comment: { 
-        type: String, 
-        required: true
-     },
-  }, 
-)
+
 interface food{
     name:string;
     category:String;
@@ -52,7 +33,7 @@ const foodSchema = new Schema<food>({
     type: Number,
     required: true,
   },
-  reviews: [reviewSchema],
+  reviews: [],
   rating: {
     type: Number,
     required: true,

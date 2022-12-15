@@ -6,8 +6,15 @@ import router2    from './routes/restaurantRoute'
 import router3    from './routes/foodRoute'
 import router4    from './routes/categoryRoute'
 import router5    from './routes/orderRoute'
+import router6    from "./routes/reviewRoute"
+import router7    from "./routes/sellerRoute"
+import router8    from "./routes/favRoute"
 import multer     from 'multer'
 import ngrok from "ngrok"
+import couponCodeDiscount from "./routes/couponRoute";
+import CouponCodeDiscount from "./models/couponModel"
+import dotenv from 'dotenv'
+dotenv.config()
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -40,8 +47,40 @@ app.post('/api/file',upload,(req:any,res)=>{
     await ngrok.connect();
   })()
   
+
+//checking coupon code expiration time valid or not to reduce server load
+app.use("/api", couponCodeDiscount);
+
+export const checkExpirationTime = () => {
+    CouponCodeDiscount.find({}) .exec()
+        .then((Coupon) => {
+            if (Coupon) {
+                Coupon.map((getCoupon:any) => {
+                    if (
+                        new Date().getTime() >= new Date(getCoupon.expirationTime).getTime() // expirationTime data access from database
+                    ) {
+                        CouponCodeDiscount.findOneAndDelete({
+                                _id: getCoupon._id,
+                            })
+                            .exec()
+                            .then((deleteCoupon) => {
+                                console.log(`Coupon doesnt exists or expired`);
+                            })
+                            .catch((error) => {
+                                console.log(error, "Error occured on coupon section");
+ });
+                    }
+                });
+            }
+            if (!Coupon) {
+                console.log("No Coupon found...");
+            }
+        });
+};
+setInterval(checkExpirationTime, 1000); // converting to millisecond
+couponCodeDiscount.post("/checkExpirationTime",checkExpirationTime)
 connect.connects()
-app.use('/', router,router2,router3,router4,router5)
+app.use('/', router,router2,router3,router4,router5,router6,router7,couponCodeDiscount,router8)
 
 app.listen(process.env.PORT || 3000, function() {
     console.log('Express app running on port ' + (process.env.PORT || 3000))

@@ -3,8 +3,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isValid = exports.isValidPincode = exports.isValidObjectId = exports.isValidPasscode = exports.isValidEmail = exports.isValidPhone = void 0;
+exports.isValidPincode = exports.isValidObjectId = exports.isValidPasscode = exports.isValidEmail = exports.isValidPhone = exports.isValid = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
+const isValid = function (value) {
+    if (typeof value === 'undefined' || value === null)
+        return false;
+    if (typeof value === 'string' && value.trim().length === 0)
+        return false;
+    return true;
+};
+exports.isValid = isValid;
 const isValidPhone = (mobile) => {
     const phone = /^[6-9]\d{9}$/;
     return phone.test(mobile);
@@ -29,11 +37,3 @@ const isValidPincode = (pincode) => {
     return pin.test(pincode);
 };
 exports.isValidPincode = isValidPincode;
-const isValid = function (value) {
-    if (typeof value === 'undefined' || value === null)
-        return false;
-    if (typeof value === 'string' && value.trim().length === 0)
-        return false;
-    return true;
-};
-exports.isValid = isValid;

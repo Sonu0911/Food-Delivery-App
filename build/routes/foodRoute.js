@@ -33,4 +33,5 @@ foodRouter.post("/addFood", foodController.addingFood);
 foodRouter.get("/getFood/:foodId", foodController.getFoodByRestro);
 foodRouter.get("/getFoods", foodController.getListOfFood);
 foodRouter.get("/get/:restroId", foodController.getFood);
+foodRouter.delete("/deleteFood/:foodId", foodController.deleteFood);
 exports.default = foodRouter;

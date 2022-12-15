@@ -26,15 +26,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyOtp = exports.forgotPassode = exports.getUser = exports.updateUser = exports.verifyLoginOtp = exports.login = exports.verifyRegisterOtp = exports.signup = void 0;
+exports.changePass = exports.verifyOtp = exports.forgotPassode = exports.getUser = exports.updateUser = exports.verifyLoginOtp = exports.login = exports.verifyRegisterOtp = exports.signup = void 0;
 const userModel_1 = __importDefault(require("../models/userModel"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const val = __importStar(require("../validation/validation"));
 const util_1 = require("../util/util");
 const signup = async (req, res) => {
     try {
-        let data = req.body;
-        const { name, mobile, email, passcode, confirm_passcode, state } = data;
+        const { name, mobile, email, passcode, confirm_passcode, state } = req.body;
         if (!val.isValid(name) || !val.isValidPhone(mobile) || !val.isValidEmail(email) || !val.isValidPasscode(passcode) || !val.isValidPasscode(confirm_passcode) || !state) {
             return res.status(400).send({ status: false, msg: "all valid fields are required" });
         }
@@ -53,8 +52,10 @@ const signup = async (req, res) => {
             return res.status(400).send({ status: false, msg: "email is already exists" });
         }
         const otp = (0, util_1.GenerateOtp)();
-        let savedData = await userModel_1.default.create(data);
+        let savedData = await userModel_1.default.create(req.body);
         const gOTP = await (0, util_1.getOtp)(otp, mobile);
+        savedData.otp = otp;
+        await savedData.save();
         return res.status(200).send({ status: true, msg: "otp sent successfully", data: savedData._id, otp });
     }
     catch (error) {
@@ -69,7 +70,7 @@ const verifyRegisterOtp = async (req, res) => {
         if (!user) {
             return res.status(400).send({ status: false, message: "user not found" });
         }
-        if (otp !== otp) {
+        if (otp !== user.otp) {
             return res.status(400).send({ status: false, message: "incorrect otp" });
         }
         const token = jsonwebtoken_1.default.sign({ userId: user._id }, 'Rushi-159', { expiresIn: "12h" });
@@ -83,9 +84,7 @@ const verifyRegisterOtp = async (req, res) => {
 exports.verifyRegisterOtp = verifyRegisterOtp;
 const login = async (req, res) => {
     try {
-        const userId = req.body.userId;
-        const mobile = req.body.mobile;
-        const passcode = req.body.passcode;
+        const { userId, mobile, passcode } = req.body;
         const userfind = await userModel_1.default.findOne({ _id: userId }, { isDeleted: false });
         if (!userfind) {
             return res.status(404).send({ status: false, msg: "user not found" });
@@ -101,6 +100,8 @@ const login = async (req, res) => {
         }
         const otp = (0, util_1.GenerateOtp)();
         const gOTP = await (0, util_1.getOtp)(otp, mobile);
+        userfind.otp = otp;
+        await userfind.save();
         return res.status(201).send({ status: true, msg: "otp sent successfully", userId: userfind._id, otp });
     }
     catch (error) {
@@ -115,7 +116,7 @@ const verifyLoginOtp = async (req, res) => {
         if (!user) {
             return res.status(400).send({ status: false, message: "user not found" });
         }
-        if (otp !== otp) {
+        if (otp !== user.otp) {
             return res.status(400).send({ status: false, message: "incorrect otp" });
         }
         const token = jsonwebtoken_1.default.sign({ userId: user._id }, 'Rushi-159', { expiresIn: "12h" });
@@ -209,7 +210,7 @@ const forgotPassode = async (req, res) => {
             return res.status(404).send({ status: false, msg: "user not found" });
         }
         const otp = (0, util_1.GenerateOtp)();
-        findUser.otp = "";
+        findUser.otp = otp;
         await findUser.save();
         return res.status(200).send({ status: true, msg: "otp sent successfully", data: findUser._id, otp });
     }
@@ -230,7 +231,7 @@ const verifyOtp = async (req, res) => {
             return res.status(400).send({ status: false, message: "incorrect otp" });
         }
         const token = jsonwebtoken_1.default.sign({ userId: user._id }, 'Rushi-159', { expiresIn: "12h" });
-        return res.status(201).json({ type: "successfully logged in", message: "OTP verified successfully", data: { userId: user._id, token, },
+        return res.status(201).json({ message: "OTP verified successfully", data: { userId: user._id, token },
         });
     }
     catch (err) {
@@ -238,3 +239,26 @@ const verifyOtp = async (req, res) => {
     }
 };
 exports.verifyOtp = verifyOtp;
+const changePass = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const { new_passcode, confirm_passcode } = req.body;
+        const findUser = await userModel_1.default.findOne({ _id: userId }, { isDeleted: false });
+        if (!findUser) {
+            return res.status(404).send({ status: false, msg: "user not found" });
+        }
+        if (req.body.userId != findUser._id) {
+            return res.status(403).send({ status: false, msg: "you are not authorised" });
+        }
+        if (new_passcode !== confirm_passcode) {
+            return res.status(400).send({ status: false, msg: "please enter the same passcode" });
+        }
+        const updatedUser = await userModel_1.default.findOneAndUpdate({ _id: userId }, { $set: { passcode: new_passcode } }, { new: true });
+        let data = { userId: updatedUser._id, passcode: updatedUser.passcode };
+        return res.status(200).send({ status: true, msg: "passcode updated", data: data });
+    }
+    catch (err) {
+        return res.status(500).send({ status: false, msg: err.message });
+    }
+};
+exports.changePass = changePass;

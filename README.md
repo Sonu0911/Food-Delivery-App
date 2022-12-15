@@ -77,9 +77,71 @@ UTIL
 
 
 
+// user
+1. signup
+2. verify resgister otp;
+3. login;
+4. verify login otp;
+5. edit the user;
+6. get the user'
+7. forgot passcode;
+8. verify the otp;
+9. change passcode;
 
-      
-      
-        
+// restro;
+1. add the restro;
+2. get the rstro with the help of id;
+3. get the all restro;
+4. get the restro  with the help of city;
+
+// food
+1. add the food;
+2. get the food with restro
+3. get the list of  the food;
+4. get the single food;  
+5. delete the food;
+
+// category;
+1. create the category;
+2. get the category;
+3. delete the category;
+
+// order
+1. create the order
+2. using id get the order
+3. user's order;
+
+// payment
+1. payment(creating the payment order) ;
+2. payment capture;
+
+// review;
+1. add the review to the order;
+2. update the order;
+3. delete the review;
+
+// coupon ;
+ add the coupon 
+
+// seller;
+ add business details;
+
+// I have to work on ;
+
+// favorite
+1. add fav
+2. get that fav items list;
+3. delete ;
+
+// best choices
+CRUD
+// best offers 
+CRUD
+// today's special
+CRUD
+
+//payout
+
+
       
 

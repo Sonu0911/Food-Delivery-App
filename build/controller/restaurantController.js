@@ -26,15 +26,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllRestro = exports.getRestaurantById = exports.addRestaurant = void 0;
+exports.getRestroByCity = exports.getAllRestro = exports.getRestaurantById = exports.addRestaurant = void 0;
 const restaurantModel_1 = __importDefault(require("../models/restaurantModel"));
 const val = __importStar(require("../validation/validation"));
 const addRestaurant = async (req, res) => {
     try {
         let data = req.body;
-        const { name, description, address, mobile, reviews, rating, numReviews } = data;
-        if (!name || !description || !address || !mobile || !reviews || !rating || !numReviews) {
-            return res.status(400).send({ status: false, msg: "this field is required" });
+        const { name, description, address, mobile } = data;
+        if (!name || !description || !address || !mobile) {
+            return res.status(400).send({ status: false, msg: "all fieldas is required" });
         }
         const restrofind = await restaurantModel_1.default.find({ name: name });
         if (restrofind.length > 0) {
@@ -79,3 +79,17 @@ const getAllRestro = async (req, res) => {
     }
 };
 exports.getAllRestro = getAllRestro;
+const getRestroByCity = async (req, res) => {
+    try {
+        const city = req.params.city;
+        const findRestro = await restaurantModel_1.default.find({ city: city }, { isDeleted: false });
+        if (!findRestro) {
+            return res.status(404).send({ status: false, msg: "restaurant is not found" });
+        }
+        return res.status(200).send({ status: true, message: "List of Restro", data: findRestro });
+    }
+    catch (err) {
+        res.status(500).send({ status: false, message: err.message });
+    }
+};
+exports.getRestroByCity = getRestroByCity;

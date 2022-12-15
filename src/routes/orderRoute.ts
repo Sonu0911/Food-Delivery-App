@@ -8,7 +8,7 @@ router.get("/getOrder/:orderId",orderController.getOrderById)
 router.get("/getOrderWithUserId/:userId",orderController.getUserOrders)
 
 
-router.post("/payment",payment.Payment)
+router.post("/payment/:orderId",payment.Payment)
 router.post("/paymentCapture", payment.paymentCapture)
 
 export default router;

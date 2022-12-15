@@ -18,8 +18,11 @@ interface order{
         packingCharge:Number
         mobile:Number;
         totalPrice:Number;
+        coupon:String,
         isDelivered:Boolean;
-        deliveredAt:Date
+        deliveredAt:Date;
+        status:String;
+        orders:String
 }
 
 const orderSchema = new Schema<order>({
@@ -60,10 +63,20 @@ const orderSchema = new Schema<order>({
     },
     totalPrice: {
       type: Number,
-      required: true,
       default: 0.0,
     },
+    coupon:{
+      type: Number,
+      default:0
+    },
+    status:{
+      type: String,
+      default :"pending"
+    },
+    orders:
+     []
   },
+ 
   {
     timestamps: true,
   }

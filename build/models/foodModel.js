@@ -25,20 +25,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const ObjectId = mongoose_1.default.Schema.Types.ObjectId;
-const reviewSchema = new mongoose_1.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    rating: {
-        type: Number,
-        required: true
-    },
-    comment: {
-        type: String,
-        required: true
-    },
-});
 const foodSchema = new mongoose_1.Schema({
     name: {
         type: String,
@@ -61,7 +47,7 @@ const foodSchema = new mongoose_1.Schema({
         type: Number,
         required: true,
     },
-    reviews: [reviewSchema],
+    reviews: [],
     rating: {
         type: Number,
         required: true,
@@ -73,5 +59,5 @@ const foodSchema = new mongoose_1.Schema({
         default: 0,
     },
 });
-const foodModel = (0, mongoose_1.model)('food', foodSchema);
+const foodModel = (0, mongoose_1.model)('foods', foodSchema);
 exports.default = foodModel;
