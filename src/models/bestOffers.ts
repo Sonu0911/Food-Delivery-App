@@ -4,7 +4,8 @@ interface bestOffers{
     foodId:String
     userId:String;
     image:string;
-    note:String;
+    description:String;
+    discountPrice:Number,
     isDeleted:Boolean;
 }
 const bestOffersSchema = new Schema<bestOffers>({
@@ -20,9 +21,12 @@ const bestOffersSchema = new Schema<bestOffers>({
         type:String,
         required:true
     },
-    note:{
+    description:{
         type:String,
         required:true
+    },
+    discountPrice:{
+     type:Number,
     },
     isDeleted:{
         type: Boolean,
